@@ -10,10 +10,11 @@ import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+@Component
 @Slf4j
-public class TermoControllerImpl implements TermoController, InitializingBean,
-		Runnable {
+public class TermoControllerImpl implements TermoController, InitializingBean {
 	@Autowired
 	private TermoConfiguration config;
 	@Autowired
@@ -22,27 +23,15 @@ public class TermoControllerImpl implements TermoController, InitializingBean,
 	@Autowired
 	private TermoGraph graphController;
 
-	private Thread termoThread;
-
 	@Override
 	public void afterPropertiesSet() throws Exception {
-		this.termoThread = new Thread(this);
-		termoThread.setName("temperature_reader");
-		termoThread.setDaemon(true);
-		termoThread.start();
 		if (config.getSensorNames().size() > 0) {
 			String name = config.getSensorNames().get(0);
 			log.info("setting active sensor: {}", name);
-			model.setActiveSensor(name);
+			model.setActiveGraph(GraphTiming.MINUT_5);
 			model.setSensors(config.getSensorNames());
 		}
 
-	}
-
-	private void updateGraph(String name) {
-		File file = graphController.generateGraph(name);
-		log.debug("generating graph for {}", name);
-		model.updateGraphImage(name, file);
 	}
 
 	public static Float parseTemperature(String line) {
@@ -60,21 +49,9 @@ public class TermoControllerImpl implements TermoController, InitializingBean,
 	}
 
 	@Override
-	public void run() {
-		while (true) {
-			try {
-				Thread.sleep(config.getTemperatueReadIntervall());
-			} catch (InterruptedException e) {
-			}
-			update();
-		}
-	}
-
-	@Override
 	public void update() {
 		List<String> names = config.getSensorNames();
-		log.debug("going to update {}", names);
-		int counter = 0;
+		log.info("going to update {}", names);
 		for (String name : names) {
 			File file = config.getSensorFile(name);
 			if (!file.exists()) {
@@ -99,14 +76,23 @@ public class TermoControllerImpl implements TermoController, InitializingBean,
 						e.toString());
 
 			}
-			updateGraph(name);
 		}
-
 	}
 
 	@Override
-	public void setActiveSensor(String name) {
-		model.setActiveSensor(name);
+	public void setActiveGraph(GraphTiming timing) {
+		log.info("setting active graph to {}", timing);
+		model.setActiveGraph(timing);
+	}
+
+	@Override
+	public void updateGraph(GraphTiming timing) {
+
+		File file = graphController.generateGraph(timing);
+		log.debug(
+				"generating graph for all sensors{} with timing {} stored in file {}",
+				model.getSensorNames(), timing, file);
+		model.updateGraphImage(timing, file);
 
 	}
 }

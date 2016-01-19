@@ -1,33 +1,15 @@
 package termoserver;
 
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
+@EnableScheduling
 @Configuration
 public class SpringConfiguration {
 
-	@Bean
-	public TemperatureProvider temperatureProvider() {
-		return new FakeTemperatureProvider();
-	}
-
-	@Bean
-	TermoConfiguration termoConfiguration() {
-		return new TermoConfiguration();
-	}
-
-	@Bean
-	TermoController termoController() {
-		return new TermoControllerImpl();
-	}
-
-	@Bean
-	TermoModel termoModel() {
-		return new TermoModelImpl();
-	}
-
-	@Bean
-	TermoGraph termoGraph() {
-		return new TermoGraph();
-	}
+	/**
+	 * we do not need to define particular beans here as they are scanned by
+	 * spring and created by @Component or such<br>
+	 * We need to have config to set Scheduling on.
+	 */
 }

@@ -14,7 +14,9 @@ import org.mapdb.DBMaker;
 import org.mapdb.DBMaker.Maker;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+@Component
 public class TermoModelImpl implements TermoModel, InitializingBean {
 
 	@Autowired
@@ -22,12 +24,14 @@ public class TermoModelImpl implements TermoModel, InitializingBean {
 
 	private Set<TermoModelListener> listeners = new HashSet<>();
 	private List<String> sensorNames = new ArrayList<>();
-	private Map<String, File> graphMap = new HashMap<>();
+	private Map<GraphTiming, File> graphMap = new HashMap<>();
 	private Map<String, Long> latestUpdates = new HashMap<>();
 
 	private DB db;
 
-	private String activeSensor;
+	private File allSensorGraph = null;
+
+	private GraphTiming activeGraphTiming = GraphTiming.MINUT_5;
 
 	@Override
 	public void registerListener(TermoModelListener listener) {
@@ -77,28 +81,8 @@ public class TermoModelImpl implements TermoModel, InitializingBean {
 	}
 
 	@Override
-	public File getGraphFile(String sensorName) {
-		return graphMap.get(sensorName);
-	}
-
-	@Override
-	public void setActiveSensor(String activeSensor) {
-		this.activeSensor = activeSensor;
-	}
-
-	@Override
-	public String getActiveSensor() {
-		return activeSensor;
-	}
-
-	@Override
 	public Map<Long, Float> getData(String sensorName) {
 		return getDB(sensorName);
-	}
-
-	@Override
-	public void updateGraphImage(String sensorName, File file) {
-		this.graphMap.put(sensorName, file);
 	}
 
 	@Override
@@ -110,6 +94,38 @@ public class TermoModelImpl implements TermoModel, InitializingBean {
 	public void setSensors(List<String> sensorNames) {
 		this.sensorNames.clear();
 		this.sensorNames.addAll(sensorNames);
+	}
+
+	@Override
+	public void updateGraphImage(File file) {
+		this.allSensorGraph = file;
+
+	}
+
+	@Override
+	public File getAllSensorGraphFile() {
+		return allSensorGraph;
+	}
+
+	@Override
+	public void setActiveGraph(GraphTiming timing) {
+		this.activeGraphTiming = timing;
+	}
+
+	@Override
+	public void updateGraphImage(GraphTiming timing, File file) {
+		this.graphMap.put(timing, file);
+
+	}
+
+	@Override
+	public File getGraph() {
+		return graphMap.get(activeGraphTiming);
+	}
+
+	@Override
+	public GraphTiming getActiveGraphTiming() {
+		return activeGraphTiming;
 	}
 
 }

@@ -13,7 +13,6 @@ import com.vaadin.annotations.Theme;
 import com.vaadin.server.FileResource;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.spring.annotation.SpringUI;
-import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.HorizontalLayout;
@@ -57,10 +56,11 @@ public class TermoServerUI extends UI implements TermoModelListener {
 
 	private Component createGraph() {
 
-		File graphFile = model.getGraphFile(model.getActiveSensor());
+		// File graphFile = model.getGraphFile(model.getActiveSensor());
+		File graphFile = model.getGraph();
 		if (graphFile == null) {
-			log.warn("no image for {} in model", model.getActiveSensor());
-			return new Label("no graph for " + model.getActiveSensor());
+			log.warn("no image for {} in model", model.getActiveGraphTiming());
+			return new Label("no graph for " + model.getActiveGraphTiming());
 		}
 
 		Image graphImage = new Image("Termo graph ",
@@ -75,57 +75,80 @@ public class TermoServerUI extends UI implements TermoModelListener {
 
 		VerticalLayout mainVL = new VerticalLayout();
 		HorizontalLayout allSensorsHL = new HorizontalLayout();
+		allSensorsHL.setMargin(true);
+		allSensorsHL.setSpacing(true);
 
 		List<String> sensors = model.getSensorNames();
 
 		if (sensors.size() == 0) {
+			allSensorsHL.addComponent(new Label("no sensors configured"));
 			log.warn("no sensor to display");
 			return;
 		}
-		String activeSensor = model.getActiveSensor();
-		TemperatureUpdate latestUpdate = model.getLatestUpdate(activeSensor);
-		if (activeSensor != null && latestUpdate != null) {
-			Panel panel = new Panel(String.format("<b>%s</b>", activeSensor));
 
-			VerticalLayout activeVL = new VerticalLayout();
-			activeVL.setMargin(true);
-
-			Button activeButton = new Button(String.format("%.2f[C] - %s",
-					latestUpdate.getTemperature(),
-					longToTime(latestUpdate.getTime())));
-			activeButton.addClickListener((event) -> controller.update());
-
-			activeVL.addComponent(activeButton);
-
-			activeVL.addComponent(createGraph());
-
-			activeVL.setComponentAlignment(activeButton,
-					Alignment.MIDDLE_CENTER);
-			panel.setContent(activeVL);
-			mainVL.addComponent(panel);
-		}
+		// if (activeSensor != null) {
+		// TemperatureUpdate latestUpdate = model
+		// .getLatestUpdate(activeSensor);
+		// Panel panel = new Panel(String.format("<b>%s</b>", activeSensor));
+		//
+		// VerticalLayout activeVL = new VerticalLayout();
+		// activeVL.setMargin(true);
+		// String time = (latestUpdate == null ? "?" : longToTime(latestUpdate
+		// .getTime()));
+		// float temp = (latestUpdate == null ? 0f : latestUpdate
+		// .getTemperature());
+		// Button activeButton = new Button(String.format("%.2f[C] - %s",
+		// temp, time));
+		// activeButton.addClickListener((event) -> controller.update());
+		//
+		// activeVL.addComponent(activeButton);
+		//
+		// activeVL.addComponent(createGraph());
+		//
+		// activeVL.setComponentAlignment(activeButton,
+		// Alignment.MIDDLE_CENTER);
+		// panel.setContent(activeVL);
+		// mainVL.addComponent(panel);
+		//
+		// }
 
 		for (String name : sensors) {
-			TemperatureUpdate update = model.getLatestUpdate(name);
-			if (update == null) {
-				continue;
-			}
-			Button sB = new Button(String.format("%s (%.2f[C]/%s)", name,
-					update.getTemperature(), longToTime(update.getTime())));
-			sB.addClickListener((event) -> sensorSelected(name));
-			allSensorsHL.addComponent(sB);
+			TemperatureUpdate latestUpdate = model.getLatestUpdate(name);
+			String time = (latestUpdate == null ? "?" : longToTime(latestUpdate
+					.getTime()));
+			float temp = (latestUpdate == null ? 0f : latestUpdate
+					.getTemperature());
+
+			Label sensorLabel = new Label(String.format("%s (%.2f[C]  %s)",
+					name, temp, time));
+			allSensorsHL.addComponent(sensorLabel);
 		}
 		mainVL.addComponent(allSensorsHL);
+		mainVL.addComponent(createGraph());
+
+		HorizontalLayout graphControlHL = new HorizontalLayout();
+		Button hoursB = new Button("5 hodin");
+		hoursB.addClickListener((event) -> updateGraph(GraphTiming.HOUR5));
+		Button minuteB = new Button("5 minut");
+		minuteB.addClickListener((event) -> updateGraph(GraphTiming.MINUT_5));
+		Button daysB = new Button("5 days");
+		daysB.addClickListener((event) -> updateGraph(GraphTiming.DAY_5));
+		graphControlHL.addComponent(minuteB);
+		graphControlHL.addComponent(hoursB);
+		graphControlHL.addComponent(daysB);
+		mainVL.addComponent(graphControlHL);
+
+		// mainVL.addComponent(new Label("hello world"));
 		setContent(mainVL); // Attach to the UI
+	}
+
+	private void updateGraph(GraphTiming timing) {
+		controller.setActiveGraph(timing);
+		reset();
 	}
 
 	private String longToTime(long time) {
 		return format.format(new Date(time));
-	}
-
-	private void sensorSelected(String name) {
-		controller.setActiveSensor(name);
-		reset();
 	}
 
 	@Override

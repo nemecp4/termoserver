@@ -12,18 +12,27 @@ public interface TermoModel {
 
 	public TemperatureUpdate getLatestUpdate(String sensorName);
 
-	public File getGraphFile(String sensorName);
-
-	public void setActiveSensor(String sensorName);
-
-	public String getActiveSensor();
-
 	public Map<Long, Float> getData(String sensorName);
 
-	public void updateGraphImage(String sensorName, File file);
+	public void updateGraphImage(GraphTiming timing, File file);
 
 	public List<String> getSensorNames();
 
 	public void setSensors(List<String> sensorNames);
+
+	/**
+	 * Update graph with all sensor in one file
+	 * 
+	 * @param file
+	 */
+	public void updateGraphImage(File file);
+
+	public File getAllSensorGraphFile();
+
+	public void setActiveGraph(GraphTiming timing);
+
+	public File getGraph();
+
+	public GraphTiming getActiveGraphTiming();
 
 }

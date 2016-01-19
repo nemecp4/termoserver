@@ -13,7 +13,9 @@ import java.util.TreeMap;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.stereotype.Component;
 
+@Component
 @Slf4j
 public class TermoConfiguration implements InitializingBean {
 
