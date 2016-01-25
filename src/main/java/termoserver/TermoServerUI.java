@@ -129,8 +129,8 @@ public class TermoServerUI extends UI implements TermoModelListener {
 		HorizontalLayout graphControlHL = new HorizontalLayout();
 		Button hoursB = new Button("5 hodin");
 		hoursB.addClickListener((event) -> updateGraph(GraphTiming.HOUR5));
-		Button minuteB = new Button("5 minut");
-		minuteB.addClickListener((event) -> updateGraph(GraphTiming.MINUT_5));
+		Button minuteB = new Button("30 minut");
+		minuteB.addClickListener((event) -> updateGraph(GraphTiming.MINUT_30));
 		Button daysB = new Button("5 days");
 		daysB.addClickListener((event) -> updateGraph(GraphTiming.DAY_5));
 		graphControlHL.addComponent(minuteB);

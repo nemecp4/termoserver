@@ -28,7 +28,7 @@ public class TermoControllerImpl implements TermoController, InitializingBean {
 		if (config.getSensorNames().size() > 0) {
 			String name = config.getSensorNames().get(0);
 			log.info("setting active sensor: {}", name);
-			model.setActiveGraph(GraphTiming.MINUT_5);
+			model.setActiveGraph(GraphTiming.MINUT_30);
 			model.setSensors(config.getSensorNames());
 		}
 

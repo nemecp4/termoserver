@@ -23,18 +23,18 @@ public class TemperatureUpdater {
 	}
 
 	/**
-	 * once a 1minute=60000
+	 * once a 30 minute=1800000
 	 */
-	@Scheduled(fixedDelay = 10000)
-	public void update5M() {
+	@Scheduled(fixedDelay = 1800000)
+	public void update30M() {
 		log.info("scheduled update of temperature");
-		controller.updateGraph(GraphTiming.MINUT_5);
+		controller.updateGraph(GraphTiming.MINUT_30);
 	}
 
 	/**
-	 * once a 1hour=360000
+	 * once a 5 hour=18000000
 	 */
-	@Scheduled(fixedDelay = 10000)
+	@Scheduled(fixedDelay = 18000000)
 	public void update5H() {
 		log.info("scheduled update of temperature");
 		controller.updateGraph(GraphTiming.HOUR5);
@@ -43,7 +43,7 @@ public class TemperatureUpdater {
 	/**
 	 * once a 6hour=21600000
 	 */
-	@Scheduled(fixedDelay = 10000)
+	@Scheduled(fixedDelay = 21600000)
 	public void update5D() {
 		log.info("scheduled update of temperature");
 		controller.updateGraph(GraphTiming.DAY_5);

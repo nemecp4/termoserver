@@ -31,7 +31,7 @@ public class TermoModelImpl implements TermoModel, InitializingBean {
 
 	private File allSensorGraph = null;
 
-	private GraphTiming activeGraphTiming = GraphTiming.MINUT_5;
+	private GraphTiming activeGraphTiming = GraphTiming.MINUT_30;
 
 	@Override
 	public void registerListener(TermoModelListener listener) {

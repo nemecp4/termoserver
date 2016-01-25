@@ -3,7 +3,7 @@ package termoserver;
 import java.time.temporal.ChronoUnit;
 
 public enum GraphTiming {
-	HOUR5(5, ChronoUnit.HOURS), DAY_5(5, ChronoUnit.DAYS), MINUT_5(5,
+	HOUR5(5, ChronoUnit.HOURS), DAY_5(5, ChronoUnit.DAYS), MINUT_30(30,
 			ChronoUnit.MINUTES);
 
 	private long duration;
