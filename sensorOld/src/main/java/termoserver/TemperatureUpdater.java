@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 @Service
 @Slf4j
 public class TemperatureUpdater {
-
+	
 	@Autowired
 	private TermoController controller;
 
@@ -20,12 +20,13 @@ public class TemperatureUpdater {
 	public void readTemperature() {
 		log.info("reading temperature");
 		controller.update();
+
 	}
 
 	/**
 	 * once a 5 minute=300 000
 	 */
-	@Scheduled(fixedDelay = 300000)
+	@Scheduled(fixedDelay = 30000)
 	public void update30M() {
 		log.info("Updating 30m graph");
 		controller.updateGraph(GraphTiming.MINUT_30);
@@ -34,7 +35,7 @@ public class TemperatureUpdater {
 	/**
 	 * once per 30 minute = 18000000
 	 */
-	@Scheduled(fixedDelay = 18000000)
+	@Scheduled(fixedDelay = 30000)
 	public void update5H() {
 		log.info("Updating 5H temperature");
 		controller.updateGraph(GraphTiming.HOUR5);
@@ -43,7 +44,7 @@ public class TemperatureUpdater {
 	/**
 	 * once a hour=3600000
 	 */
-	@Scheduled(fixedDelay = 3600000)
+	@Scheduled(fixedDelay = 30000)
 	public void update5D() {
 		log.info("Updating 5D temperature");
 		controller.updateGraph(GraphTiming.DAY_5);

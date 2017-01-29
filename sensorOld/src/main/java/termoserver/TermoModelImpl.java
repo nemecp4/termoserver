@@ -12,6 +12,7 @@ import java.util.Set;
 import org.mapdb.DB;
 import org.mapdb.DBMaker;
 import org.mapdb.DBMaker.Maker;
+import org.mapdb.HTreeMap;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -38,6 +39,7 @@ public class TermoModelImpl implements TermoModel, InitializingBean {
 		listeners.add(listener);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public void saveTemperature(String name, float value, long date) {
 		getDB(name).put(date, value);
@@ -55,8 +57,7 @@ public class TermoModelImpl implements TermoModel, InitializingBean {
 	@Override
 	public void afterPropertiesSet() throws Exception {
 		File dbFile = configuration.getDBFile();
-		Maker maker = DBMaker.fileDB(dbFile).compressionEnable()
-				.fileMmapEnable().closeOnJvmShutdown();
+		Maker maker = DBMaker.fileDB(dbFile).fileMmapEnable().closeOnJvmShutdown();
 		db = maker.make();
 	}
 
@@ -76,8 +77,8 @@ public class TermoModelImpl implements TermoModel, InitializingBean {
 		return new TemperatureUpdate(key, value);
 	}
 
-	private Map<Long, Float> getDB(String name) {
-		return db.hashMap(name);
+	private Map getDB(String name) {
+		return db.hashMap(name).createOrOpen();
 	}
 
 	@Override
