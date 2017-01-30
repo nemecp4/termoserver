@@ -14,7 +14,6 @@
 		<maven.compiler.target>1.8</maven.compiler.target>
 	</properties>
 
-
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
@@ -24,8 +23,8 @@
 	<modules>
 		<module>sensorServer</module>
 		<module>sensorOld</module>
+		<module>sensorServerApp</module>
 	</modules>
-	
 
 	<dependencyManagement>
 		<dependencies>

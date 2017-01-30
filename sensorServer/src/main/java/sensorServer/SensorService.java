@@ -2,14 +2,11 @@ package sensorServer;
 
 import java.sql.Timestamp;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.function.Function;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
@@ -72,8 +69,20 @@ public class SensorService {
 
 	public List<TermoValue> getData(String sensorName, Long from, Long to) {
 		Map<Long, Float> storage = getStorage(sensorName);
-		return storage.keySet().stream().filter(p -> biggerThan(p, from)).filter(p -> lessThan(p, to))
-				.map(key -> new TermoValue(new Timestamp(key), storage.get(key))).collect(Collectors.toList());
+		return storage.keySet().stream()
+				.filter(p -> biggerThan(p, from))
+				.filter(p -> lessThan(p, to))
+				.map(key -> new TermoValue(new Timestamp(key), storage.get(key)))
+				.collect(Collectors.toList());
+	}
+
+	public List<TermoValue> getData(String sensorName, long from) {
+		Map<Long, Float> storage = getStorage(sensorName);
+		return storage.keySet()
+				.stream()
+					.filter(p -> biggerThan(p, from))
+				.map(key -> new TermoValue(new Timestamp(key), storage.get(key)))
+				.collect(Collectors.toList());
 	}
 
 	private Map<Long, Float> getStorage(String sensorName) {
@@ -88,7 +97,7 @@ public class SensorService {
 	}
 
 	private boolean biggerThan(Long l1, Long l2) {
-		return l2 == null ? true : l1 > l2;
+		return l1 > l2;
 	}
 
 }

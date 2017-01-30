@@ -10,6 +10,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 public class SensorUpdateInterval {
+	public static SensorUpdateInterval DEFAULT_UPDATE_INTERVAL = new SensorUpdateInterval(TimeUnit.SECONDS, 30l);
+
 	private TimeUnit timeUnit;
 	private long value;
 

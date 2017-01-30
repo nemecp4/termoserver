@@ -1,0 +1,80 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<artifactId>sensorServerApp</artifactId>
+	<packaging>jar</packaging>
+	<name>sensorServerApp</name>
+
+	<parent>
+		<groupId>pavel.nemec.homebrew</groupId>
+		<artifactId>termoserver</artifactId>
+		<version>0.2-SNAPSHOT</version>
+	</parent>
+	 <build>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>appassembler-maven-plugin</artifactId>
+
+                <executions>
+                    <execution>
+                        <id>generate-jsw-scripts</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>generate-daemons</goal>
+                        </goals>
+                        <configuration>
+                            <daemons>
+                                <!-- TODO: we should not need any extra arguments, this cannot run locally for example -->
+                                <daemon>
+                                    <id>comparator-web</id>
+                                    <generatorConfigurations>
+                                        <generatorConfiguration>
+                                            <generator>jsw</generator>
+                                            <configuration>
+                                                <property>
+                                                    <name>wrapper.ping.timeout</name>
+                                                    <value>120</value>
+                                                </property>
+                                                <property>
+                                                    <name>wrapper.logfile</name>
+                                                    <value>/var/log/kotel/kotel-YYYYMMDD.stdout</value>
+                                                </property>
+                                                <property>
+                                                    <name>wrapper.logfile.maxfiles</name>
+                                                    <value>3</value>
+                                                </property>
+                                                <property>
+                                                    <name>wrapper.logfile.rollmode</name>
+                                                    <value>DATE</value>
+                                                </property>
+                                                <property>
+                                                    <name>wrapper.logfile.format</name>
+                                                    <value>PM</value>
+                                                </property>
+                                            </configuration>
+                                        </generatorConfiguration>
+                                    </generatorConfigurations>
+                                </daemon>
+                            </daemons>
+                          
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+	
+	<dependencies>
+		<dependency>
+			<groupId>pavel.nemec.homebrew</groupId>
+			<artifactId>sensorServer</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+	</dependencies>
+</project>
