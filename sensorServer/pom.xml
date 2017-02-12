@@ -21,20 +21,6 @@
 					<target>1.8</target>
 				</configuration>
 			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-shade-plugin</artifactId>
-				<!-- <configuration> <minimizeJar>true</minimizeJar> </configuration> -->
-				<executions>
-					<execution>
-						<phase>package</phase>
-						<goals>
-							<goal>shade</goal>
-						</goals>
-					</execution>
-
-				</executions>
-			</plugin>
 		</plugins>
 	</build>
 	<dependencies>
@@ -52,7 +38,7 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId> spring-boot-starter-test</artifactId>
-			<scope>testing</scope>
+			<scope>test</scope>
 		</dependency>
 
 		<dependency>
