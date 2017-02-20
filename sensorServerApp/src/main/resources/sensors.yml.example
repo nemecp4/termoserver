@@ -1,0 +1,8 @@
+- !!sensorServer.configuration.SensorConfiguration
+  name: Nam1
+  sensorFile: /tmp/term1
+  sensorUpdateInterval: {timeUnit: SECONDS, value: 30}
+- !!sensorServer.configuration.SensorConfiguration
+  name: Nam2
+  sensorFile: /tmp/term2
+  sensorUpdateInterval: {timeUnit: HOURS, value: 30}

@@ -31,9 +31,6 @@ import sensorServer.configuration.SensorUpdateInterval;
 @EnableScheduling
 @Configuration
 public class SpringConfiguration {
-
-	private static final SensorUpdateInterval SensorUpdateInterval = null;
-
 	@Bean
 	public DB db(@Value("${mapdb.dbfile}") String dbFile) {
 		log.info("opening MapDB at {}", dbFile);

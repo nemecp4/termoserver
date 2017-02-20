@@ -1,0 +1,12 @@
+#!/bin/bash
+set -e
+
+BASE_DIR=/usr/local/sensorServer
+JAVA_OPTS=""
+JAVA=$(which java)
+MAIN_CLASS=sensorserver.SensorServer
+logger "starting Sensor Server"
+exec $JAVA ${JAVA_OPTS} \
+	-Dlogging.config=/etc/sensorServer/logback-sensorserver.xml \
+	-cp  "${BASE_DIR}/*:/etc/sensorServer/" \
+	${MAIN_CLASS}
